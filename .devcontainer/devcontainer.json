@@ -1,0 +1,10 @@
+{
+  "name": "QUMASUN Workshop",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "hostRequirements": {
+    "cpus": 2,
+    "memory": "8gb"
+  }
+}

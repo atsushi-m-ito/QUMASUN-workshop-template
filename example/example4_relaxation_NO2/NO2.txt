@@ -1,0 +1,65 @@
+SCF.Step       200
+SCF.EigenSolver.Step    3
+SCF.EigenSolver.InitialStep    30
+Initial.Density        atom
+
+System.AtomicElement.Begin
+#  H      PP/nc-sr-05_pbe_standard_upf/H.upf
+  N      PP/nc-sr-05_pbe_standard_upf/N.upf
+  O      PP/nc-sr-05_pbe_standard_upf/O.upf
+System.AtomicElement.End
+
+Material.SuperCell     1 1 1
+Material.UnitLatticeVector.Unit    Ang
+
+Material.UnitLatticeVector.Begin
+  8.0 0.0 0.0          # Angstrome
+  0.0 8.0 0.0
+  0.0 0.0 8.0
+Material.UnitLatticeVector.End
+
+Material.UnitCell.Unit    Ang
+
+Material.UnitCell.Begin
+#  O  4.00  5.00  5.00
+#  O  6.00  5.00  5.00
+  O  3.0  4.0  4.0
+  O  5.0  4.0  4.0
+  N  4.0  4.0  4.2
+Material.UnitCell.End
+
+System.SpaceGrid     auto
+System.SpaceGrid.CutoffEnergyRy    70  #If SpaceGrid == auto, SpaceGrid is automatically set from this cutoff energy.
+System.SpaceGrid.Divisor    2 2 2       #If SpaceGrid estimated from CutoffEnergyRy is set to be divided by the Divisor.
+System.HighResolution.Ratio  2
+System.Hamiltonian      KohnSham_PP
+System.XC           GGA_PBE           #LDA or GGA_PBE
+System.KpointSample   1 1 1
+
+#Test.Algorithm.Laplacian   FFT2
+
+SCF.Temperature   300.0
+SCF.MixingRatio   0.3
+SCF.MixingMode    DIIS    #Simple, LBFGS, LBFGSKerker, or DIIS
+SCF.MixingKerkerFactor    0.0
+SCF.MixingNumHistory   7
+SCF.ResidualConvergence   3.0e-8
+SCF.Threshold.Density     1.0e-7
+#SCF.Threshold.Energy     1.0e-6
+
+System.NumElectrons    auto
+System.TotalCharge     0
+System.NumSolutions    (halfve+) 1
+System.SpinPolarization.Mode        1
+Initial.SpinDifference            1
+
+Dynamics.Mode   Relaxation
+Dynamics.Step   100
+Dynamics.Force.Threshold   1.0e-3
+Dynamics.TimeStep   1.0
+
+
+#Output.StateVector     state
+#Output.OrbitalDensity     orbital_rho
+
+

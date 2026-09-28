@@ -1,0 +1,55 @@
+## Input file of bcc-W for QUMASUN #############
+#(a)シミュレーションボックスと原子の配置
+Material.UnitLatticeVector.Unit    Ang
+Material.UnitLatticeVector.Begin
+  10.0 0.0 0.0          # Angstrome
+  0.0 10.0 0.0
+  0.0 0.0 10.0
+Material.UnitLatticeVector.End
+Material.UnitCell.Unit    FRAC
+Material.UnitCell.Begin
+  W  0.5  0.5  0.5
+Material.UnitCell.End
+Material.SuperCell      1 1 1
+
+System.AtomicElement.Begin
+  W        PP/nc-sr-05_pbe_standard_upf/W.upf
+System.AtomicElement.End
+
+System.NumElectrons     auto
+System.TotalCharge      0     # 0 means neutral
+System.NumSolutions     (halfve+)3
+System.SpinPolarization.Mode      0
+Initial.SpinDifference            4
+Initial.Density         atom
+/*
+Initial.Occupancy.Begin
+  1  1   1
+  3  1   1
+  1  1   1
+  5  0.8   0
+Initial.Occupancy.End
+*/
+
+System.SpaceGrid        auto
+System.SpaceGrid.CutoffEnergyRy   110
+System.SpaceGrid.Divisor     2 2 2
+System.HighResolution.Ratio  2
+
+System.Hamiltonian      KohnSham_PP
+System.XC               GGA_PBE #   LDA or GGA_PBE
+System.KpointSample     1 1 1
+System.KpointSymmetry   auto
+
+SCF.Step                300
+SCF.EigenSolver.Step    3
+SCF.EigenSolver.InitialStep    30
+SCF.Temperature         300.0
+SCF.MixingMode          DIIS    
+SCF.MixingRatio         0.8
+SCF.MixingKerkerFactor  0.0
+SCF.MixingNumHistory    7
+SCF.Threshold.Density     1.0e-7
+#SCF.ResidualConvergence 3.0e-8
+#SCF.Threshold.Energy     1.0e-6
+#################################################

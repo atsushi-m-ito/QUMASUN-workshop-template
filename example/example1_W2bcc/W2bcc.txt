@@ -1,0 +1,52 @@
+## Input file of bcc-W for QUMASUN #############
+#(a)シミュレーションボックスと原子の配置
+Material.UnitLatticeVector.Unit    Ang
+Material.UnitLatticeVector.Begin
+  3.16 0.0 0.0          # Angstrome
+  0.0 3.16 0.0
+  0.0 0.0 3.16
+Material.UnitLatticeVector.End
+Material.UnitCell.Unit    FRAC
+Material.UnitCell.Begin
+  W  0.0  0.0  0.0
+  W  0.5  0.5  0.5
+Material.UnitCell.End
+Material.SuperCell      1 1 1
+
+System.AtomicElement.Begin
+  W        PP/nc-sr-05_pbe_standard_upf/W.upf
+System.AtomicElement.End
+
+System.NumElectrons     auto
+System.TotalCharge      0     # 0 means neutral
+System.NumSolutions     (halfve+)5
+System.SpinPolarization.Mode      0
+Initial.Density         atom
+
+System.SpaceGrid        auto
+System.SpaceGrid.CutoffEnergyRy   110
+System.SpaceGrid.Divisor     2 2 2
+System.HighResolution.Ratio  2
+
+System.Hamiltonian      KohnSham_PP
+System.XC               GGA_PBE #   LDA or GGA_PBE
+System.KpointSample     5 5 5
+System.KpointSymmetry   auto
+
+SCF.Step                300
+SCF.EigenSolver.Step    3
+SCF.EigenSolver.InitialStep    30
+SCF.Temperature         300.0
+SCF.MixingMode          DIIS    
+SCF.MixingRatio         0.8
+SCF.MixingKerkerFactor  0.0
+SCF.MixingNumHistory    7
+SCF.Threshold.Density     1.0e-7
+#SCF.ResidualConvergence 3.0e-8
+#SCF.Threshold.Energy     1.0e-6
+
+
+#Dynamics.Mode       Scaling1
+Dynamics.Parameter.Scaling1    1.00  1.02   11
+
+#################################################

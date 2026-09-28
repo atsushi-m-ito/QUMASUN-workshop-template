@@ -1,0 +1,6 @@
+License of Pseudo Dojo
+
+All pseudopotentials and their associated input files are released under a CC BY 4.0 license, which allows them to be used, modified, and distributed in personal, academic, and commercial applications as long as the Pseudo Dojo project is credited for the original creation.
+
+Pseudo Dojo website:
+https://www.pseudo-dojo.org/

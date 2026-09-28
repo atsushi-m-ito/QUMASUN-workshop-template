@@ -1,0 +1,70 @@
+
+# for NVidia CUDA
+
+
+GY_FLAGS = -DGY_WITH_CUDA
+#GY_FLAGS = -DGY_WITH_HIP
+#GY_FLAGS = -DGY_WITH_OMP
+
+COMMONFLAGS =  -Igield -I/usr/include/ -DUSE_MPI -DUSE_SCALAPACK -DPP_SHIFT_VIA_FFT -restrict
+
+NVCC = nvcc -ccbin mpic++
+NVCCFLAGS = -std=c++17 -arch compute_80 -code=sm_80 --extended-lambda $(COMMONFLAGS)
+HIPCC = hipcc
+HIPCCFLAGS = -O3 -std=c++17 --offload-arch=gfx942 -mcmodel=large $(COMMONFLAGS)
+
+GYCC = $(NVCC)
+GYCCFLAGS = $(GY_FLAGS) $(NVCCFLAGS)
+
+#GYCC = $(HIPCC)
+#GYCCFLAGS = $(GY_FLAGS) $(HIPCCFLAGS)
+
+CXXFLAGS = $(GY_FLAGS) -std=c++17 -O3 -Wall -march=native 
+#LDFLAGS   = -L/opt/cuda/targets/x86_64-linux/lib/ -lcudart
+#LDFLAGS   = -L/usr/lib/x86_64-linux-gnu/ -lcudart
+LDFLAGS	= -lcudart -lcublas -L/usr/lib64 -lfftw3 -lblas -llapack
+
+
+#DEST          = ../
+#CXXFLAGS = -I$(MKLROOT)/include/fftw
+#LDFLAGS       = 
+#LDFLAGSMPI    = 
+#LIBS          = -L$(MKLROOT)/lib/intel64 -lmkl_scalapack_lp64 -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -lmkl_blacs_intelmpi_lp64 -lpthread -lifcore
+
+PROGRAM = qumasun.exe
+## list cpp source files without GPU kernel functions.
+SRCS      = 
+## list cpp source files with GPU kernel functions.
+SRCS_WITH_KERNEL = main_mpi.cpp $(wildcard qumasun_*.cpp)
+OBJ_DIR = ./obj
+KERNEL_DIR    = ./objk
+OBJS = $(addprefix $(OBJ_DIR)/, $(notdir $(SRCS:.cpp=.o)))
+OBJ_KERNEL = $(addprefix $(KERNEL_DIR)/, $(notdir $(SRCS_WITH_KERNEL:.cpp=.o)))
+DEPS      = $(OBJ_KERNEL:.o=.d)
+
+#.SUFFIXES:
+.SUFFIXES: .o .co .cu .cpp
+
+$(PROGRAM):$(OBJS) $(OBJ_KERNEL)
+	$(GYCC) $(LDFLAGS) -o $@ $^
+
+-include $(DEPS)
+
+$(OBJ_DIR)/%.o: %.cpp
+	-mkdir -p $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) -I./ -o $@ -c $<
+
+$(KERNEL_DIR)/%.o : %.cpp
+	-mkdir -p $(KERNEL_DIR)
+	cp -p $< $(KERNEL_DIR)/$<.cu
+	$(GYCC) $(GYCCFLAGS) -I./ -o $@ -c $(KERNEL_DIR)/$<.cu
+
+
+clean:
+	$(RM) $(PROGRAM) $(OBJS) $(OBJ_KERNEL) $(DEPS)
+	
+
+install:	$(PROGRAM)
+		cp -p $(PROGRAM) $(DEST)
+
+
